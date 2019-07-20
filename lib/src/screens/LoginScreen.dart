@@ -6,13 +6,19 @@ class LoginScreen extends StatefulWidget {
 }
 
 class LoginScreenState extends State<LoginScreen> {
+  final formKey = GlobalKey<FormState>();
+  String email = '';
+  String password = '';
+
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.all(20.0),
       child: Form(
+        key: formKey,
         child: Column(
           children: <Widget>[
+            Container(margin: EdgeInsets.only(top: 30.0)),
             emailField(),
             passwordField(),
             Container(margin: EdgeInsets.only(top: 20.0)),
@@ -30,6 +36,10 @@ class LoginScreenState extends State<LoginScreen> {
         labelText: 'Email',
         hintText: 'mickey@example.com',
       ),
+      validator: (String value) {
+        if (!value.contains('@')) return 'Please enter a valid email';
+      },
+      onSaved: (String value) => email = value,
     );
   }
 
@@ -40,13 +50,21 @@ class LoginScreenState extends State<LoginScreen> {
         labelText: 'Password',
         hintText: '*****',
       ),
+      validator: (String value) {
+        if (value.length < 4) return 'Please enter a valid password';
+      },
+      onSaved: (String value) => password = value,
     );
   }
 
   Widget submitButton() {
     return RaisedButton(
       color: Colors.amber,
-      onPressed: () => {},
+      onPressed: () {
+        if (formKey.currentState.validate()) {
+          formKey.currentState.save();
+        }
+      },
       child: Text('Submit'),
     );
   }
