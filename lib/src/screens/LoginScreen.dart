@@ -1,68 +1,54 @@
 import 'package:flutter/material.dart';
 
-import '../mixins/ValidationMixins.dart';
+import '../blocs/Bloc.dart';
 
-class LoginScreen extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() => LoginScreenState();
-}
-
-class LoginScreenState extends State<LoginScreen> with ValidationMixin {
-  final formKey = GlobalKey<FormState>();
-  String email = '';
-  String password = '';
+class LoginScreen extends StatelessWidget {
+  final bloc = Bloc();
 
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.all(20.0),
-      child: Form(
-        key: formKey,
-        child: Column(
-          children: <Widget>[
-            Container(margin: EdgeInsets.only(top: 30.0)),
-            emailField(),
-            passwordField(),
-            Container(margin: EdgeInsets.only(top: 20.0)),
-            submitButton(),
-          ],
-        ),
+      child: Column(
+        children: <Widget>[
+          Container(margin: EdgeInsets.only(top: 30.0)),
+          emailField(),
+          passwordField(),
+          Container(margin: EdgeInsets.only(top: 20.0)),
+          submitButton(),
+        ],
       ),
     );
   }
 
   Widget emailField() {
-    return TextFormField(
+    return TextField(
       keyboardType: TextInputType.emailAddress,
       decoration: InputDecoration(
         labelText: 'Email',
         hintText: 'mickey@example.com',
+        errorText: 'Please enter a valid email',
       ),
-      validator: this.validateEmail,
-      onSaved: (String value) => email = value,
+      onChanged: bloc.changeEmail,
     );
   }
 
   Widget passwordField() {
-    return TextFormField(
+    return TextField(
       obscureText: true,
       decoration: InputDecoration(
         labelText: 'Password',
         hintText: '*****',
+        errorText: 'Please enter a valid password',
       ),
-      validator: this.validatePassword,
-      onSaved: (String value) => password = value,
+      onChanged: bloc.changePassword,
     );
   }
 
   Widget submitButton() {
     return RaisedButton(
       color: Colors.amber,
-      onPressed: () {
-        if (formKey.currentState.validate()) {
-          formKey.currentState.save();
-        }
-      },
+      onPressed: () {},
       child: Text('Submit'),
     );
   }
